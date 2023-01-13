@@ -13,6 +13,13 @@ def pendaftar():
         "Pendaftar" : listpendaftar
     }
 
+@app.route("/tambah_pendaftar/<nama>")
+def tambah (nama):
+    listpendaftar.append(nama)
+    return {
+        "message" : f"list pendaftar berhasil diupdate : {listpendaftar}"
+    }
+
 
 if "__main__"==__name__:
     app.run(debug=True, port = 2000)
