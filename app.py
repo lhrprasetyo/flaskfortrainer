@@ -20,6 +20,12 @@ def tambah (nama):
         "message" : f"list pendaftar berhasil diupdate : {listpendaftar}"
     }
 
+@app.route("/delete/<nama>")
+def delete_pendaftar(nama):
+    listpendaftar.remove(nama)
+    return{
+        "message" : f"Pendaftar berhasil dihapus, menjadi : {listpendaftar}"
+    }
 
 if "__main__"==__name__:
     app.run(debug=True, port = 2000)
