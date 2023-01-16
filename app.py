@@ -27,9 +27,8 @@ def welcome_to_budi():
     }
 @app.route("/pendaftar")
 def pendaftar():
-    return {
-        "Pendaftar" : listpendaftar
-    }
+    list_peserta = Peserta.query.all()
+    return render_template("list_pendaftar.html",lp = list_peserta,tgl = date.today())
 
 @app.route("/tambah_pendaftar/<nama>")
 def tambah (nama):
