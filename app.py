@@ -20,11 +20,7 @@ class Peserta(db.Model):
     def __repr__(self) -> str:
         return self.nama
 
-@app.route("/")
-def welcome_to_budi():
-    return{
-        "message" : "welcome home"
-    }
+
 @app.route("/pendaftar")
 def pendaftar():
     list_peserta = Peserta.query.all()
@@ -48,6 +44,26 @@ def tambah ():
     db.session.commit()
     return redirect ('/pendaftar')
     
+@app.route("/pendaftar/<id>/edit")
+def edit_pendaftar(id):
+    obj = Peserta.query.filter_by(id=id).first()
+    return render_template('edit_pendaftar.html', obj = obj)
+
+@app.route("/pendaftar/<id>/update", methods=['POST'])
+def update_pendaftar(id):
+    obj = Peserta.query.filter_by(id=id).first()
+    f_nama= request.form.get("nama")
+    f_alamat= request.form.get("alamat")
+    f_gender= request.form.get("gender")
+    f_umur= request.form.get("umur")
+
+    obj.nama = f_nama
+    obj.alamat = f_alamat
+    obj.gender = f_gender
+    obj.umur = f_umur
+    db.session.add(obj)
+    db.session.commit()
+    return redirect("/pendaftar")
 
 @app.route("/pendaftar/<id>/delete")
 def delete_pendaftar(id):
@@ -55,8 +71,9 @@ def delete_pendaftar(id):
     db.session.delete(obj)
     db.session.commit()
     return redirect("/pendaftar")
+# obj disini bisa  diganti nama var nya
 
-@app.route("/home/<nama>")
+@app.route("/")
 def home(nama):
     nama=nama
     return render_template ('home.html', nama = nama)
