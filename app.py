@@ -1,10 +1,16 @@
-from flask import Flask,render_template,request,redirect
+from flask import Flask,render_template,request,redirect,url_for
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER='static\img'
+ALLOWED_EXTENSIONS={'jpg','jpeg','png','HEIC'}
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///peserta.db'
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER   
 
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
@@ -16,10 +22,14 @@ class Peserta(db.Model):
     alamat=db.Column(db.String(50))
     gender=db.Column(db.String(5))
     umur=db.Column(db.Integer())
+    foto=db.Column(db.String(100))
 
     def __repr__(self) -> str:
         return self.nama
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/pendaftar")
 def pendaftar():
@@ -38,11 +48,17 @@ def tambah ():
         f_alamat = request.form.get("alamat")
         f_gender = request.form.get("gender")
         f_umur = request.form.get("umur")
+        foto = request.files['img']
 
-    p=Peserta(nama=f_nama,alamat=f_alamat,gender=f_gender,umur=f_umur)
-    db.session.add(p)
-    db.session.commit()
-    return redirect ('/pendaftar')
+        if foto and allowed_file(foto.filename):
+            filename= secure_filename(foto.filename)
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+            f_foto = os.path.join('static\img' , filename)
+            p=Peserta(nama=f_nama,alamat=f_alamat,gender=f_gender,umur=f_umur,foto=f_foto)
+            db.session.add(p)
+            db.session.commit()
+            return redirect ('/pendaftar')
     
 @app.route("/pendaftar/<id>/edit")
 def edit_pendaftar(id):
@@ -74,9 +90,12 @@ def delete_pendaftar(id):
 # obj disini bisa  diganti nama var nya
 
 @app.route("/")
-def home(nama):
-    nama=nama
-    return render_template ('home.html', nama = nama)
+def home():
+    return render_template('home.html')
+
+@app.route('/load_image')
+def image():
+    return render_template('load_image.html')   
 
 
 if "__main__"==__name__:

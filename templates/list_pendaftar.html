@@ -21,6 +21,7 @@
         <table class="table">
           <thead class="table-dark">
             <th>No</th>
+            <th></th>
             <th>Nama</th>
             <th>Alamat</th>
             <th>Gender</th>
@@ -32,6 +33,7 @@
             {% for l in lp %}
             <tr>
               <td>{{loop.index}}</td>
+              <td><img src="{{l.foto}}" style="width: 50px  ;" alt=""></td>
               <td>{{l.nama}}</td>
               <td>{{l.alamat}}</td>
               <td>{{l.gender}}</td>

@@ -13,7 +13,7 @@
             <div class="col"></div>
             <div class="col">
                 <h1 style="text-align:center">Tambah Peserta</h1>
-                <form action="/tambah_pendaftar/save" method="post">
+                <form action="/tambah_pendaftar/save" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="">Nama</label>
                         <input type="text" name="nama" id="" class="form-control">
@@ -29,6 +29,10 @@
                     <div class="form-group">
                         <label for="">Umur</label>
                         <input type="text" name="umur" id="" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Masukkan Gambar</label>
+                        <input type="file" name="img" id="">
                     </div>
                     <div class="form-group">
                         <a href="/pendaftar" class="btn btn-warning">cancel</a>
